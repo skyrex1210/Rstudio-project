@@ -1,0 +1,73 @@
+---
+title: "Traffic_violators"
+author: "Violators"
+date: "`r format(Sys.time(), '%d %B, %Y')`" 
+output: 
+  html_document:
+    
+    theme: flatly
+    toc: TRUE
+    toc_float: TRUE
+    code_download: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, cache = F}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  error = TRUE,
+  warning= FALSE,
+  message= FALSE)
+```
+
+##Loading package
+```{r}
+library(tidyverse)
+```
+
+
+##Reading two datasets
+```{r}
+#To make sure the working directory of the data set
+getwd()
+#Importing csv files
+traffic <- read_csv("Traffic.csv")
+weather <- read_csv("weather.csv")
+```
+
+```{r}
+#For outline look of the dataset and variables of traffic dataset.
+glimpse(traffic)
+
+#Data set contains lot of column names which have space which can create complexity in manipulation and visualization so renaming the data set traffic columns using rename function as part of data preparation
+
+traffic <-  rename(traffic, Date = 'Date Of Stop', time_of_stop = 'Time Of Stop', personal_injury = 'Personal Injury', property_damage = 'Property Damage', commercial_license = 'Commercial License', Commercial_Vehicle = 'Commercial Vehicle', Work_Zone ='Work Zone', Search_Conducted = 'Search Conducted', Search_Disposition = 'Search Disposition', Search_Outcome = 'Search Outcome', Search_Reason = 'Search Reason', Search_Reason_Stop = 'Search Reason For Stop', Search_Type ='Search Type', Search_Arrest_r = 'Search Arrest Reason', Violation_Type ='Violation Type', Contributed_Accident='Contributed To Accident', Driver_City = 'Driver City', Driver_State = 'Driver State', DL_State = 'DL State', Arrest_Type = 'Arrest Type')
+
+#For outline look of the dataset and variables of the weather dataset.
+glimpse(weather)
+
+#Dataset column precipitation had spacing issue so renaming the column using rename function as part of data preparation.
+weather <- rename(weather, precipitation = 'Precipitation (in)')
+```
+
+#Combing Two datasets data.
+```{r}
+#Using inner join combing two datasets based on Date. 
+trafficfull <- traffic %>%  inner_join(weather, by = "Date")
+
+#Exporting the combined dataset as CSV file.
+write_csv(trafficfull, 'Dataset.csv')
+```
+
+
+#Exploration 
+```{r}
+glimpse(trafficfull)
+```
+
+```{r}
+
+```
+
+
