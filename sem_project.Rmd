@@ -66,8 +66,14 @@ write_csv(trafficfull, 'Dataset.csv')
 glimpse(trafficfull)
 ```
 
+#refining Dataset
 ```{r}
 
+tf <- sample_n(trafficfull, 800000)
+tf <- tf %>% separate(Date,into = c("month","day","year"))
+glimpse(tf)
+
+write_csv(tf, 'S.csv')
 ```
 
 
