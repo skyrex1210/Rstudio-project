@@ -58,6 +58,7 @@ trafficfull <- traffic %>%  inner_join(weather, by = "Date")
 
 #Exporting the combined dataset as CSV file.
 write_csv(trafficfull, 'Dataset.csv')
+t <- read_csv('Dataset.csv')
 ```
 
 
@@ -76,4 +77,99 @@ glimpse(tf)
 write_csv(tf, 'S.csv')
 ```
 
+#Question 1
+
+
+```{r}
+
+# Statistics
+
+tf %>%  filter(Search_Reason == 'Probable cause' | Search_Reason == 'Incident to Arrest' ) %>% select(Race) %>%  group_by(Race) %>% summarise(count = n())
+
+tf %>% filter(Alcohol == 'Yes') %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+
+tf %>% filter(Violation_Type == "Warning") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+
+tf %>% filter(Violation_Type == "Citation") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+
+tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+
+#Visualization
+
+```
+
+#Question 2
+
+```{r}
+#statistics
+
+glimpse(tf)
+
+tf  %>%  group_by(Gender) %>% summarise(Count =n())
+tf %>% filter(Accident == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+tf %>% filter(Belts == 'No') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+tf %>% filter(property_damage == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+tf %>% filter(Fatal == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+tf %>% filter(Alcohol == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+
+#Visualization
+
+
+```
+
+#Question 3
+
+```{r}
+#statics
+glimpse(tf)
+
+
+tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(desc(Count))
+tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(Count)
+tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(Count)
+tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(desc(Count))
+tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(Count)
+tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(desc(Count))
+
+#Visualization
+
+
+```
+
+#Question 4
+
+```{r}
+glimpse(tf)
+
+#temperature effect.
+
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )   %>%  summarise(min(Avg_temp))
+
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=10 & 1 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=20 & 11 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=30 & 21 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=40 & 31 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=50 & 41 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=60 & 51 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=70 & 61 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=80 & 71 <= Avg_temp ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )  %>% filter(Avg_temp <=90 & 81 <= Avg_temp ) %>%  summarise(count = n())
+
+
+#Humidity effect.
+
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )   %>%  summarise(max(Avg_hum))
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=10 & 1 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=20 & 11 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=30 & 21 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=40 & 31 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=50 & 41 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=60 & 51 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=70 & 61 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=80 & 71 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=90 & 81 <= Avg_hum ) %>%  summarise(count = n())
+tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=100 & 91 <= Avg_hum ) %>%  summarise(count = n())
+
+
+```
 
