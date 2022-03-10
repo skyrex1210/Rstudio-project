@@ -24,6 +24,7 @@ knitr::opts_chunk$set(
 ##Loading package
 ```{r}
 library(tidyverse)
+
 ```
 
 
@@ -84,17 +85,25 @@ write_csv(tf, 'S.csv')
 
 # Statistics
 
-tf %>%  filter(Search_Reason == 'Probable cause' | Search_Reason == 'Incident to Arrest' ) %>% select(Race) %>%  group_by(Race) %>% summarise(count = n())
+t1<- tf %>% group_by(Race) %>% summarise(count = n())
 
-tf %>% filter(Alcohol == 'Yes') %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+t2 <- tf %>%  filter(Search_Reason == 'Probable cause' | Search_Reason == 'Incident to Arrest' ) %>% select(Race) %>%  group_by(Race) %>% summarise(Search = n()) 
 
-tf %>% filter(Violation_Type == "Warning") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+t3 <- tf %>% filter(Alcohol == 'Yes') %>% select(Race) %>% group_by(Race) %>% summarise(Alcohol= n())
 
-tf %>% filter(Violation_Type == "Citation") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+ t4 <- tf%>% filter(Violation_Type == "Warning") %>% select(Race) %>% group_by(Race) %>% summarise(Warning = n())
 
-tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summarise(count = n())
+t5 <- tf %>% filter(Violation_Type == "Citation") %>% select(Race) %>% group_by(Race) %>% summarise(citation = n())
+
+t6 <- tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summarise(accident = n())
+
+q1 <- t1 %>% inner_join(t2,by = 'Race') %>% inner_join(t3, by = 'Race') %>%  inner_join(t4, by = 'Race') %>% inner_join(t5, by = 'Race') %>% inner_join(t6, by = 'Race') 
+
 
 #Visualization
+
+ggplot(q1)+ geom_point(mapping = aes(x=Search, y = accident), shape = 8, size = 2) + geom_point(mapping =  aes(x = Search, y =citation,  color = Alcohol ), shape = 15,  size = 3)+geom_point(mapping =  aes(x = Search, y =Warning),shape = 17, size = 3) + facet_grid(~ Race) 
+
 
 ```
 
@@ -106,14 +115,18 @@ tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summari
 glimpse(tf)
 
 tf  %>%  group_by(Gender) %>% summarise(Count =n())
-tf %>% filter(Accident == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
-tf %>% filter(Belts == 'No') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
-tf %>% filter(property_damage == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
-tf %>% filter(Fatal == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
-tf %>% filter(Alcohol == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(Count =n()) 
+t1 <- tf %>% filter(Accident == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(accident =n()) 
+t2 <- tf %>% filter(Belts == 'No') %>% select(Gender) %>%  group_by(Gender) %>% summarise(belts =n()) 
+t3 <- tf %>% filter(property_damage == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(property =n()) 
+t4 <- tf %>% filter(Fatal == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(fatal =n()) 
+t5 <- tf %>% filter(Alcohol == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(alcohol =n()) 
+
+q2 <- t1 %>% inner_join(t2,by = 'Gender') %>% inner_join(t3, by = 'Gender') %>%  inner_join(t4, by = 'Gender') %>% inner_join(t5, by = 'Gender')
+
+view(q2)
 
 #Visualization
-
+ggplot(q2)+geom_point(mapping = aes(x = belts, y = accident ), shape = 18 ,size =3 ,color ='#FC4E07') + geom_point(mapping = aes(x = belts, y = property), shape =17, size =2) + geom_point(mapping = aes(x = belts, y = fatal), size =2)+  geom_point(mapping = aes(x = belts, y = alcohol), shape = 15, size = 2.5, color ='#0000FF' )+facet_wrap(~Gender)
 
 ```
 
@@ -133,6 +146,9 @@ tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %
 
 #Visualization
 
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year,color = year, fill = year))+geom_bar() + facet_wrap(~month)
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year, color = year, fill = year))+geom_bar()
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=month, color = year, fill = year))+geom_bar()
 
 ```
 
@@ -170,6 +186,8 @@ tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=90 & 81 <= Avg_hum ) %>%  summarise(count = n())
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=100 & 91 <= Avg_hum ) %>%  summarise(count = n())
 
+#Visualization
+tf %>% filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% ggplot(aes(x=Avg_temp , fill = "Temperature") )+geom_bar() + geom_bar(mapping =  aes(x=Avg_hum, fill = "Humidity" ))
 
 ```
 
