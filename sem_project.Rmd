@@ -21,13 +21,17 @@ knitr::opts_chunk$set(
   message= FALSE)
 ```
 
+#introduction
+The dataset is about the traffic violation of montgomery county, it has been updated daily from 2013, We combined the dataset with weather data of montgomery county which help to achieve the view of weather effects on the traffic violation. 
+The dataset have many factors such Race, Type of search, Type of outcome after search which helps us to understand the different scenarios and analysis this data will help many industries including insurance, vehicle repair, traffic education.
+
 ##Loading package
 ```{r}
 library(tidyverse)
-
+tf <- read_csv(S.csv)
 ```
 
-
+##Not required everytime.
 ##Reading two datasets
 ```{r}
 #To make sure the working directory of the data set
@@ -68,6 +72,7 @@ t <- read_csv('Dataset.csv')
 glimpse(trafficfull)
 ```
 
+Huge dataset can leading huge process time and results bad in convey the outcome so that we are randomly sampling the data to 800,000.
 #refining Dataset
 ```{r}
 
@@ -78,86 +83,107 @@ glimpse(tf)
 write_csv(tf, 'S.csv')
 ```
 
+
+##Body
+
+We had one of the goal for this project is help change the view of the society in different instances and framed the questions. As we intended we got stunning results from the dataset.
+
 #Question 1
 
+When it comes to Race, most controversial things are heard, we often see black people pulled over lot of times, we wantto dig deep into problem to see is there a statiscial answer to that.
+
+#Which Race is pulled over for search with reason of probable cause, incident to arrest, did they warning, or a citation, are they been in accident or are they possed With alochol.
 
 ```{r}
 
-# Statistics
+# Statistics (This data helps to identify answer in number which would help to bring out the clear view )
 
-t1<- tf %>% group_by(Race) %>% summarise(count = n())
+t1<- tf %>% group_by(Race) %>% summarise(count = n()) #too see total count of cases
 
-t2 <- tf %>%  filter(Search_Reason == 'Probable cause' | Search_Reason == 'Incident to Arrest' ) %>% select(Race) %>%  group_by(Race) %>% summarise(Search = n()) 
+t2 <- tf %>%  filter(Search_Reason == 'Probable cause' | Search_Reason == 'Incident to Arrest' ) %>% select(Race) %>%  group_by(Race) %>% summarise(Search = n())  #filter the only one which are probable cause or incident to arrest and counting total
 
-t3 <- tf %>% filter(Alcohol == 'Yes') %>% select(Race) %>% group_by(Race) %>% summarise(Alcohol= n())
+t3 <- tf %>% filter(Alcohol == 'Yes') %>% select(Race) %>% group_by(Race) %>% summarise(Alcohol= n()) #filter cases which possessed alcohol.and counting total
 
- t4 <- tf%>% filter(Violation_Type == "Warning") %>% select(Race) %>% group_by(Race) %>% summarise(Warning = n())
+ t4 <- tf%>% filter(Violation_Type == "Warning") %>% select(Race) %>% group_by(Race) %>% summarise(Warning = n()) # filter cases which got a warning and counting total
 
-t5 <- tf %>% filter(Violation_Type == "Citation") %>% select(Race) %>% group_by(Race) %>% summarise(citation = n())
+t5 <- tf %>% filter(Violation_Type == "Citation") %>% select(Race) %>% group_by(Race) %>% summarise(citation = n()) # filtering cases which got ticket or citation and counting total
 
-t6 <- tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summarise(accident = n())
+t6 <- tf %>% filter(Accident == "Yes") %>% select(Race) %>% group_by(Race) %>% summarise(accident = n()) #filtering cases which involved in a accident and counting total
 
-q1 <- t1 %>% inner_join(t2,by = 'Race') %>% inner_join(t3, by = 'Race') %>%  inner_join(t4, by = 'Race') %>% inner_join(t5, by = 'Race') %>% inner_join(t6, by = 'Race') 
+q1 <- t1 %>% inner_join(t2,by = 'Race') %>% inner_join(t3, by = 'Race') %>%  inner_join(t4, by = 'Race') %>% inner_join(t5, by = 'Race') %>% inner_join(t6, by = 'Race')  #Combine the data into table for visualization 
 
 
 #Visualization
 
-ggplot(q1)+ geom_point(mapping = aes(x=Search, y = accident), shape = 8, size = 2) + geom_point(mapping =  aes(x = Search, y =citation,  color = Alcohol ), shape = 15,  size = 3)+geom_point(mapping =  aes(x = Search, y =Warning),shape = 17, size = 3) + facet_grid(~ Race) 
+ggplot(q1)+ geom_point(mapping = aes(x=Search, y = accident), shape = 8, size = 2) + geom_point(mapping =  aes(x = Search, y =citation,  color = Alcohol ), shape = 15,  size = 3)+geom_point(mapping =  aes(x = Search, y =Warning),shape = 17, size = 3) + facet_grid(~ Race) # add layers of scatter plots and shape to determine which point showing right factor value while color is used alchol to view how many cases poses.
 
 
 ```
 
 #Question 2
+We been in a society where social media mocks female driver to be unsafe and they are risky ones, We want to look into it , that it really has a point.
+
+#Which gender is less involved with accidents, property damage, fatality while no possessing alcohol and wearing belts and meant to be safe drivers?
+
 
 ```{r}
 #statistics
 
 glimpse(tf)
 
-tf  %>%  group_by(Gender) %>% summarise(Count =n())
-t1 <- tf %>% filter(Accident == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(accident =n()) 
-t2 <- tf %>% filter(Belts == 'No') %>% select(Gender) %>%  group_by(Gender) %>% summarise(belts =n()) 
-t3 <- tf %>% filter(property_damage == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(property =n()) 
-t4 <- tf %>% filter(Fatal == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(fatal =n()) 
-t5 <- tf %>% filter(Alcohol == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(alcohol =n()) 
+tf  %>%  group_by(Gender) %>% summarise(Count =n()) #counting the number of cases
+t1 <- tf %>% filter(Accident == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(accident =n()) #counting of number people involved in accidents. 
+t2 <- tf %>% filter(Belts == 'No') %>% select(Gender) %>%  group_by(Gender) %>% summarise(belts =n()) #counting of number people wore seat belts.  
+t3 <- tf %>% filter(property_damage == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(property =n()) #counting of number people involved in property damage.  
+t4 <- tf %>% filter(Fatal == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(fatal =n()) #counting of number people involved in fatality 
+t5 <- tf %>% filter(Alcohol == 'Yes') %>% select(Gender) %>%  group_by(Gender) %>% summarise(alcohol =n()) #counting of number people possessed alcohol and driving.. 
 
-q2 <- t1 %>% inner_join(t2,by = 'Gender') %>% inner_join(t3, by = 'Gender') %>%  inner_join(t4, by = 'Gender') %>% inner_join(t5, by = 'Gender')
+q2 <- t1 %>% inner_join(t2,by = 'Gender') %>% inner_join(t3, by = 'Gender') %>%  inner_join(t4, by = 'Gender') %>% inner_join(t5, by = 'Gender') #Combing the output into a table for visualization using inner joint.
 
 view(q2)
 
 #Visualization
-ggplot(q2)+geom_point(mapping = aes(x = belts, y = accident ), shape = 18 ,size =3 ,color ='#FC4E07') + geom_point(mapping = aes(x = belts, y = property), shape =17, size =2) + geom_point(mapping = aes(x = belts, y = fatal), size =2)+  geom_point(mapping = aes(x = belts, y = alcohol), shape = 15, size = 2.5, color ='#0000FF' )+facet_wrap(~Gender)
-
+ggplot(q2)+geom_point(mapping = aes(x = belts, y = accident ), shape = 18 ,size =3 ,color ='#FC4E07') + geom_point(mapping = aes(x = belts, y = property), shape =17, size =2) + geom_point(mapping = aes(x = belts, y = fatal), size =2)+  geom_point(mapping = aes(x = belts, y = alcohol), shape = 15, size = 2.5, color ='#0000FF' )+facet_wrap(~Gender)# add layers of scatter plots and shape to determine which point showing right factor value.
 ```
 
 #Question 3
+
+We want to see what the trend of accidents, is it going higher as the years move forward or is there a specific whether.
+
+#whats trend of accidents which months and years ?
 
 ```{r}
 #statics
 glimpse(tf)
 
 
-tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(desc(Count))
-tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(Count)
-tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(Count)
-tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(desc(Count))
-tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(Count)
-tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(desc(Count))
+tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(desc(Count)) #shows data for each month and year desc order
+tf %>% filter(Accident == 'Yes') %>% group_by(month, year) %>% summarise(Count =n())  %>% arrange(Count)#shows data for each month and year asc order
+tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(Count)#shows data for each month 
+tf %>% filter(Accident == 'Yes') %>% group_by(month) %>% summarise(Count =n())  %>% arrange(desc(Count))#shows data for each month desc order
+tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(Count)#shows data for each year  order
+tf %>% filter(Accident == 'Yes') %>% group_by(year) %>% summarise(Count =n())  %>% arrange(desc(Count))#shows data for each year desc order
 
 #Visualization
 
-tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year,color = year, fill = year))+geom_bar() + facet_wrap(~month)
-tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year, color = year, fill = year))+geom_bar()
-tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=month, color = year, fill = year))+geom_bar()
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year,color = year, fill = year))+geom_bar() + facet_wrap(~month) #helps to see trend of each year and each month.
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=year, color = year, fill = year))+geom_bar() #helps to see each year trends
+tf %>% filter(Accident == 'Yes') %>% ggplot(aes(x=month, color = year, fill = year))+geom_bar() # helps to which months have huge impact
 
 ```
 
 #Question 4
 
+we all know harsh weather causes accidents such winter with snow, other than we want to explorer does only cool temperature has effects.
+
+#Does temperature and humidity have effect on the car accidents?
+
 ```{r}
 glimpse(tf)
 
 #temperature effect.
+
+#filter the data where accidents are ahppend in subsetting the numerical temperature into group.
 
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_temp )   %>%  summarise(min(Avg_temp))
 
@@ -174,6 +200,8 @@ tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 
 
 #Humidity effect.
 
+#filter the data where accidents are ahppend in subsetting the numerical temperature into group.
+
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )   %>%  summarise(max(Avg_hum))
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=10 & 1 <= Avg_hum ) %>%  summarise(count = n())
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=20 & 11 <= Avg_hum ) %>%  summarise(count = n())
@@ -187,7 +215,7 @@ tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 
 tf %>%  filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% select(  Avg_hum )  %>% filter(Avg_hum <=100 & 91 <= Avg_hum ) %>%  summarise(count = n())
 
 #Visualization
-tf %>% filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% ggplot(aes(x=Avg_temp , fill = "Temperature") )+geom_bar() + geom_bar(mapping =  aes(x=Avg_hum, fill = "Humidity" ))
+tf %>% filter(Accident == 'Yes' | personal_injury == 'Yes' |property_damage == 'Yes' | Fatal == 'Yes') %>% ggplot(aes(x=Avg_temp , fill = "Temperature") )+geom_bar() + geom_bar(mapping =  aes(x=Avg_hum, fill = "Humidity" )) # two bars were used to show the relation between the factors and accidents.
 
 ```
 
