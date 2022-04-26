@@ -1,0 +1,50 @@
+---
+title: "RStudio Sparklyr: Class 1"
+author: "Biagio Palese"
+date: "`r format(Sys.time(), '%d %B, %Y')`" 
+output: 
+  html_document:
+    
+    theme: flatly
+    toc: TRUE
+    toc_float: TRUE
+    code_download: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, cache = F}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  error = TRUE,
+  warning= FALSE,
+  message= FALSE)
+```
+
+#Introduction
+
+We are the analytical team called violator, We have been provided the opportunity to analyse the Traffic violation data of Montgomery city to help the newly started auto insurance company to setup initial policy quote trends which benefits both company and its customers. It has been updated daily from 2013, We combined the dataset with weather data of Montgomery county which help to achieve the view of weather effects on the traffic violation. The dataset have many factors such violation, dates, type of the vehicle, violation type, property damage which helps us to understand the trends. 
+
+### Prerequisites
+#java installation
+```{r}
+# using the link https://therinspark.com/appendix.html#appendix-install-java to install java
+# check the version of the java
+system("java -version")#has to be 1.8
+```
+#Installing sparklyr
+```{r}
+install.packages("sparklyr") #run if you don't have it installed
+packageVersion("sparklyr")#should be 1.7
+```
+
+
+##Loading Package
+```{r}
+library(tidyverse)#Manipulation techniques
+library(sparklyr)#spark enables to process data in cluster of computers
+library(DBI)#helps to view or program using SQL
+
+```
+
+
